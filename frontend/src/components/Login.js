@@ -1,28 +1,29 @@
-import React, { useState } from 'react';
-import API from '../api';
+import React, { useState, useContext } from 'react';
+import AuthContext from '../context/AuthContext';
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const { login } = useContext(AuthContext);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await API.post('/users/login', { username, password });
-            localStorage.setItem('token', data.token);
-            window.location.reload();
-        } catch (error) {
-            console.error(error);
+            await login({ email, password });
+        } catch (err) {
+            setError('Login failed');
         }
     };
 
     return (
         <div className="container">
             <h2>Login</h2>
+            {error && <p>{error}</p>}
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
-                    <label>Username</label>
-                    <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} required />
+                    <label>Email</label>
+                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
                 <div className="form-group">
                     <label>Password</label>
