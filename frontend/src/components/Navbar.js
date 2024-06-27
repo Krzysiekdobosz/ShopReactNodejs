@@ -1,47 +1,59 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import AuthContext from '../context/AuthContext';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '../actions/authActions';
 
 const Navbar = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { isAuthenticated, user } = useSelector(state => state.auth);
+    const dispatch = useDispatch();
+
+    const onLogout = () => {
+        dispatch(logout());
+    };
+
+    const authLinks = (
+        <>
+            <li>
+                <Link to="/cart">Cart</Link>
+            </li>
+            <li>
+                <Link to="/saved">Saved Items</Link>
+            </li>
+            {user && user.role === 'admin' && (
+                <li>
+                    <Link to="/admin">Admin Dashboard</Link>
+                </li>
+            )}
+            <li>
+                <a href="#!" onClick={onLogout}>
+                    Logout
+                </a>
+            </li>
+        </>
+    );
+
+    const guestLinks = (
+        <>
+            <li>
+                <Link to="/login">Login</Link>
+            </li>
+            <li>
+                <Link to="/register">Register</Link>
+            </li>
+        </>
+    );
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-light">
-            <Link className="navbar-brand" to="/">Shop</Link>
-            <div className="collapse navbar-collapse">
-                <ul className="navbar-nav ml-auto">
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/">Home</Link>
-                    </li>
-                    {!user ? (
-                        <>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/login">Login</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/register">Register</Link>
-                            </li>
-                        </>
-                    ) : (
-                        <>
-                            {user.roles.includes('ROLE_ADMIN') && (
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/admin">Admin</Link>
-                                </li>
-                            )}
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/profile">Profile</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/cart">Cart</Link>
-                            </li>
-                            <li className="nav-item">
-                                <button className="nav-link btn btn-link" onClick={logout}>Logout</button>
-                            </li>
-                        </>
-                    )}
-                </ul>
-            </div>
+        <nav>
+            <h1>
+                <Link to="/">Mini Bike Shop</Link>
+            </h1>
+            <ul>
+                <li>
+                    <Link to="/products">Products</Link>
+                </li>
+                {isAuthenticated ? authLinks : guestLinks}
+            </ul>
         </nav>
     );
 };

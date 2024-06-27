@@ -1,40 +1,31 @@
-import React, { useState, useContext } from 'react';
-import AuthContext from '../context/AuthContext';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { register } from '../actions/authActions';
 
 const Register = () => {
-    const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const { register } = useContext(AuthContext);
+    const [formData, setFormData] = useState({ name: '', email: '', password: '' });
+    const [error, setError] = useState(null);
+    const dispatch = useDispatch();
 
-    const handleSubmit = async (e) => {
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onSubmit = async e => {
         e.preventDefault();
         try {
-            await register({ username, email, password });
+            await dispatch(register(formData));
         } catch (err) {
-            setError('Registration failed');
+            setError('Registration failed. Please check your information.');
         }
     };
 
     return (
-        <div className="container">
-            <h2>Register</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Username</label>
-                    <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                    <label>Password</label>
-                    <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </div>
-                <button type="submit" className="btn btn-primary">Register</button>
+        <div>
+            <h1>Register</h1>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={onSubmit}>
+                <input type="text" name="name" value={formData.name} onChange={onChange} required />
+                <input type="email" name="email" value={formData.email} onChange={onChange} required />
+                <input type="password" name="password" value={formData.password} onChange={onChange} required />
+                <button type="submit">Register</button>
             </form>
         </div>
     );

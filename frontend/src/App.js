@@ -1,42 +1,38 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Register from './components/Register';
-import Login from './components/Login';
-import AdminDashboard from './components/AdminDashboard';
-import Cart from './components/Cart';
-import Home from './components/Home';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from './store';
 import Navbar from './components/Navbar';
-import Profile from './components/Profile';
-import Admin from './components/Admin';
-import { AuthProvider } from './context/AuthContext';
+import HomePage from './components/HomePage';
+import ProductList from './components/ProductList';
+import ProductDetails from './components/ProductDetails';
+import Cart from './components/Cart';
+import SavedItems from './components/savedItems';
+import Login from './components/Login';
+import Register from './components/Register';
+import AdminDashboard from './components/AdminDashboard';
+import PrivateRoute from './components/PrivateRoute';
 
-
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-function App() {
+const App = () => {
     return (
-        <Router>
-            <div>
-              <Navbar />
-              <div className="container mt-3">
-
+        <Provider store={store}>
+            <Router>
+                <Navbar />
                 <Routes>
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/admin" element={<Admin />} />
+                    <Route path="/" element={<HomePage />} />
+                    <Route path="/products" element={<ProductList />} />
+                    <Route path="/product/:id" element={<ProductDetails />} />
                     <Route path="/cart" element={<Cart />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
-                    
-                    <Route path="/" element={<Home />} />
+                    <Route path="/saved" element={<SavedItems />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/admin/*" element={<PrivateRoute />}>
+                        <Route path="" element={<AdminDashboard />} />
+                    </Route>
                 </Routes>
-                </div>
-                
-
-
-            </div>
-        </Router>
+            </Router>
+        </Provider>
     );
-}
+};
 
 export default App;

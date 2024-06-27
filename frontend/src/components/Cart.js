@@ -1,40 +1,37 @@
-import React, { useState, useEffect } from 'react';
-import API from '../api';
-import { jwtDecode } from 'jwt-decode';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCart, removeFromCart } from '../actions/cartActions';
+
 const Cart = () => {
-    const [cart, setCart] = useState(null);
+    const dispatch = useDispatch();
+    const { cart, loading } = useSelector(state => state.cart);
 
     useEffect(() => {
-        const fetchCart = async () => {
-            const userId = jwtDecode(localStorage.getItem('token')).id;
-            const { data } = await API.get(`/cart/${userId}`);
-            setCart(data);
-        };
+        dispatch(getCart());
+    }, [dispatch]);
 
-        fetchCart();
-    }, []);
-
-    const handleRemoveItem = async (productId) => {
-        const userId = jwtDecode(localStorage.getItem('token')).id;
-        await API.delete(`/cart/${userId}/${productId}`);
-        setCart(cart.items.filter(item => item.product._id !== productId));
-    };
-
-    if (!cart) {
+    if (loading) {
         return <div>Loading...</div>;
     }
 
+    if (!cart || !cart.products) {
+        return <div>Your cart is empty.</div>;
+    }
+
     return (
-        <div className="container">
-            <h2>Cart</h2>
-            <ul className="list-group">
-                {cart.items.map(item => (
-                    <li key={item.product._id} className="list-group-item">
-                        {item.product.name} - {item.quantity}
-                        <button className="btn btn-danger float-right" onClick={() => handleRemoveItem(item.product._id)}>Remove</button>
-                    </li>
-                ))}
-            </ul>
+        <div className="cart">
+            <h1>Your Cart</h1>
+            {cart.products.length > 0 ? (
+                cart.products.map(item => (
+                    <div key={item.product._id} className="cart-item">
+                        <h2>{item.product.name}</h2>
+                        <p>Quantity: {item.quantity}</p>
+                        <button onClick={() => dispatch(removeFromCart(item.product._id))}>Remove</button>
+                    </div>
+                ))
+            ) : (
+                <p>Your cart is empty.</p>
+            )}
         </div>
     );
 };

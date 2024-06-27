@@ -1,35 +1,30 @@
-import React, { useState, useContext } from 'react';
-import AuthContext from '../context/AuthContext';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { login } from '../actions/authActions';
 
 const Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const { login } = useContext(AuthContext);
+    const [formData, setFormData] = useState({ email: '', password: '' });
+    const [error, setError] = useState(null);
+    const dispatch = useDispatch();
 
-    const handleSubmit = async (e) => {
+    const onChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onSubmit = async e => {
         e.preventDefault();
         try {
-            await login({ email, password });
+            await dispatch(login(formData));
         } catch (err) {
-            setError('Login failed');
+            setError('Login failed. Please check your credentials.');
         }
     };
 
     return (
-        <div className="container">
-            <h2>Login</h2>
-            {error && <p>{error}</p>}
-            <form onSubmit={handleSubmit}>
-                <div className="form-group">
-                    <label>Email</label>
-                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                </div>
-                <div className="form-group">
-                    <label>Password</label>
-                    <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                </div>
-                <button type="submit" className="btn btn-primary">Login</button>
+        <div>
+            <h1>Login</h1>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <form onSubmit={onSubmit}>
+                <input type="email" name="email" value={formData.email} onChange={onChange} required />
+                <input type="password" name="password" value={formData.password} onChange={onChange} required />
+                <button type="submit">Login</button>
             </form>
         </div>
     );

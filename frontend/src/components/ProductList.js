@@ -1,29 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import API from '../api';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { getProducts } from '../actions/productActions';
 
-const ProductList = ({ onEdit }) => {
-    const [products, setProducts] = useState([]);
+const ProductList = () => {
+    const dispatch = useDispatch();
+    const { products, loading } = useSelector(state => state.products);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            const { data } = await API.get('/products');
-            setProducts(data);
-        };
+        dispatch(getProducts());
+    }, [dispatch]);
 
-        fetchProducts();
-    }, []);
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
     return (
-        <div className="container">
-            <h2>Product List</h2>
-            <ul className="list-group">
+        <div className="product-list">
+            <h1>Product List</h1>
+            <div className="products">
                 {products.map(product => (
-                    <li key={product._id} className="list-group-item">
-                        {product.name} - {product.price}
-                        <button className="btn btn-secondary float-right" onClick={() => onEdit(product)}>Edit</button>
-                    </li>
+                    <div key={product._id} className="product-item">
+                        <h2>{product.name}</h2>
+                        <p>{product.description}</p>
+                        <p>${product.price}</p>
+                        <Link to={`/product/${product._id}`}>
+                            <button>View Details</button>
+                        </Link>
+                        <button>Add to Cart</button>
+                    </div>
                 ))}
-            </ul>
+            </div>
         </div>
     );
 };
