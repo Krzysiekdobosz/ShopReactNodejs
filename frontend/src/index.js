@@ -4,10 +4,16 @@ import { Provider } from 'react-redux';
 import store from './store';
 import App from './App';
 import setAuthToken from './utils/setAuthToken';
-// Set auth token on page load if exists
+import { LOGIN_SUCCESS } from './actions/types';
+
 const token = localStorage.getItem('token');
 if (token) {
     setAuthToken(token);
+    // Dispatch login success with token
+    store.dispatch({
+        type: LOGIN_SUCCESS,
+        payload: { token }
+    });
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

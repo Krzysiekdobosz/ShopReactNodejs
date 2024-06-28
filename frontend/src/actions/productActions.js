@@ -21,7 +21,14 @@ export const getProduct = (id) => async dispatch => {
 
 export const addProduct = (productData) => async dispatch => {
     try {
-        const res = await axios.post('http://localhost:5000/api/products', productData);
+        const token = localStorage.getItem('token');
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const res = await axios.post('http://localhost:5000/api/products', productData, config);
         dispatch({ type: ADD_PRODUCT, payload: res.data });
     } catch (err) {
         console.error(err.response.data);
@@ -30,7 +37,14 @@ export const addProduct = (productData) => async dispatch => {
 
 export const updateProduct = (id, productData) => async dispatch => {
     try {
-        const res = await axios.put(`http://localhost:5000/api/products/${id}`, productData);
+        const token = localStorage.getItem('token');
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const res = await axios.put(`http://localhost:5000/api/products/${id}`, productData, config);
         dispatch({ type: UPDATE_PRODUCT, payload: res.data });
     } catch (err) {
         console.error(err.response.data);
@@ -39,7 +53,13 @@ export const updateProduct = (id, productData) => async dispatch => {
 
 export const deleteProduct = (id) => async dispatch => {
     try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`);
+        const token = localStorage.getItem('token');
+        const config = {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        };
+        const res = await axios.delete(`http://localhost:5000/api/products/${id}`, config);
         dispatch({ type: DELETE_PRODUCT, payload: id });
     } catch (err) {
         console.error(err.response.data);

@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS } from './types';
 
-// Helper to set auth token
 const setAuthToken = token => {
     if (token) {
         axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;

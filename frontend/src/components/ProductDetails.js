@@ -14,16 +14,17 @@ const ProductDetails = ({ match }) => {
         return <div>Loading...</div>;
     }
 
+    if (!product) {
+        return <div>Product not found</div>;
+    }
+
     return (
         <div className="product-details">
-            {product && (
-                <>
-                    <h1>{product.name}</h1>
-                    <p>{product.description}</p>
-                    <p>${product.price}</p>
-                    <button>Add to Cart</button>
-                </>
-            )}
+            <h1>{product.name}</h1>
+            <img src={product.image} alt={product.name} style={{ width: '400px', height: 'auto' }} />
+            <p>{product.description}</p>
+            <p>${product.price}</p>
+            <button>Add to Cart</button>
         </div>
     );
 };

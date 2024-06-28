@@ -91,3 +91,73 @@ form input {
 form button {
   width: 100%;
 }
+
+/* admin i cart v1 */
+/*  */
+
+.product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.product-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.product-item img {
+  max-width: 100%;
+  height: auto;
+}
+
+.product-details {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.product-details img {
+  max-width: 100%;
+  height: auto;
+}
+
+.admin-dashboard {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.admin-dashboard form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.admin-dashboard form input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.admin-dashboard .product-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.admin-dashboard .product-item {
+  border: 1px solid #ddd;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.admin-dashboard .product-item img {
+  max-width: 100%;
+  height: auto;
+}

@@ -55,6 +55,7 @@ const AdminDashboard = () => {
                 {products.map(product => (
                     <div key={product._id} className="product-item">
                         <h2>{product.name}</h2>
+                        <img src={product.image} alt={product.name} style={{ width: '200px', height: 'auto' }} />
                         <p>{product.description}</p>
                         <p>${product.price}</p>
                         <button onClick={() => onEdit(product)}>Edit</button>

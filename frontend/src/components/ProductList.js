@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { getProducts } from '../actions/productActions';
 
 const ProductList = () => {
@@ -22,11 +21,9 @@ const ProductList = () => {
                 {products.map(product => (
                     <div key={product._id} className="product-item">
                         <h2>{product.name}</h2>
+                        <img src={product.image} alt={product.name} style={{ width: '200px', height: 'auto' }} />
                         <p>{product.description}</p>
                         <p>${product.price}</p>
-                        <Link to={`/product/${product._id}`}>
-                            <button>View Details</button>
-                        </Link>
                         <button>Add to Cart</button>
                     </div>
                 ))}
