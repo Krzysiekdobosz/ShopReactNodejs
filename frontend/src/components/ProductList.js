@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../actions/productActions';
+import { addToCart } from '../actions/cartActions';
+import { Link } from 'react-router-dom';
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -9,6 +11,10 @@ const ProductList = () => {
     useEffect(() => {
         dispatch(getProducts());
     }, [dispatch]);
+
+    const handleAddToCart = (productId) => {
+        dispatch(addToCart(productId, 1)); // Adding 1 quantity of the product to the cart
+    };
 
     if (loading) {
         return <div>Loading...</div>;
@@ -24,7 +30,8 @@ const ProductList = () => {
                         <img src={product.image} alt={product.name} style={{ width: '200px', height: 'auto' }} />
                         <p>{product.description}</p>
                         <p>${product.price}</p>
-                        <button>Add to Cart</button>
+                        <button onClick={() => handleAddToCart(product._id)}>Add to Cart</button>
+                        <Link to={`/product/${product._id}`}><button>View Details</button></Link>
                     </div>
                 ))}
             </div>
