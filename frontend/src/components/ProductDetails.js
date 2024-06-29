@@ -24,7 +24,6 @@ const ProductDetails = ({ match }) => {
             <img src={product.image} alt={product.name} style={{ width: '400px', height: 'auto' }} />
             <p>{product.description}</p>
             <p>${product.price}</p>
-            <button>Add to Cart</button>
         </div>
     );
 };
