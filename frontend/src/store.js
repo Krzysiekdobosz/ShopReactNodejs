@@ -3,7 +3,9 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import authReducer from './reducers/authReducer';
 import productReducer from './reducers/productReducer';
 import cartReducer from './reducers/cartReducer';
-import { thunk } from 'redux-thunk'; // Corrected import
+import thunk from 'redux-thunk';
+
+
 const reducer = combineReducers({
     auth: authReducer,
     products: productReducer,
