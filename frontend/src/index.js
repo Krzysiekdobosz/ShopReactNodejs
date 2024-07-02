@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getProducts, addProduct, updateProduct, deleteProduct } from '../actions/productActions';
+import { getProducts, addProduct, updateProduct, deleteProduct } from './actions/productActions';
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
