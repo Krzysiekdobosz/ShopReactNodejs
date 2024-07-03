@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
-import Navbar from './components/Navbar';
+import CNavbar from './components/Navbar';
 import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
@@ -17,7 +17,7 @@ const App = () => {
     return (
         <Provider store={store}>
             <Router>
-                <Navbar />
+                <CNavbar />
                 <Routes>
                     <Route path="/" element={<HomePage />} />
                     <Route path="/products" element={<ProductList />} />
