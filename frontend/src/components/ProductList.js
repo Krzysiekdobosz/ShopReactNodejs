@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts } from '../actions/productActions';
 import { addToCart } from '../actions/cartActions';
+import { addToSaved } from '../actions/savedActions';
 import { Link } from 'react-router-dom';
+import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 const ProductList = () => {
     const dispatch = useDispatch();
@@ -16,26 +18,35 @@ const ProductList = () => {
         dispatch(addToCart(productId, 1)); // Adding 1 quantity of the product to the cart
     };
 
+    const handleAddToSaved = (productId) => {
+        dispatch(addToSaved(productId));
+    };
+
     if (loading) {
         return <div>Loading...</div>;
     }
 
     return (
-        <div className="product-list">
-            <h1>Product List</h1>
-            <div className="products">
+        <Container className="mt-5">
+            <h1 className="mb-4">Product List</h1>
+            <Row>
                 {products.map(product => (
-                    <div key={product._id} className="product-item">
-                        <h2>{product.name}</h2>
-                        <img src={product.image} alt={product.name} style={{ width: '200px', height: 'auto' }} />
-                        <p>{product.description}</p>
-                        <p>${product.price}</p>
-                        <button onClick={() => handleAddToCart(product._id)}>Add to Cart</button>
-                        <Link to={`/product/${product._id}`}><button>View Details</button></Link>
-                    </div>
+                    <Col md={4} key={product._id} className="mb-4">
+                        <Card>
+                            <Card.Img variant="top" src={product.image} alt={product.name} style={{ height: '200px', objectFit: 'cover' }} />
+                            <Card.Body>
+                                <Card.Title>{product.name}</Card.Title>
+                                <Card.Text>{product.description}</Card.Text>
+                                <Card.Text><strong>${product.price}</strong></Card.Text>
+                                <Button variant="primary" onClick={() => handleAddToCart(product._id)} className="me-2">Add to Cart</Button>
+                                <Button variant="secondary" onClick={() => handleAddToSaved(product._id)}>Save for Later</Button>
+                                <Button variant="info" as={Link} to={`/product/${product._id}`} className="mt-2">View Details</Button>
+                            </Card.Body>
+                        </Card>
+                    </Col>
                 ))}
-            </div>
-        </div>
+            </Row>
+        </Container>
     );
 };
 
