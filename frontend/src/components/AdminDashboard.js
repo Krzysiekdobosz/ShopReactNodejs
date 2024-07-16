@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../actions/productActions';
 import { Container, Row, Col, Button, Form, Card, Modal } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
@@ -28,8 +29,10 @@ const AdminDashboard = () => {
         e.preventDefault();
         if (editMode) {
             dispatch(updateProduct(editId, formData));
+            toast.success('Product updated successfully!');
         } else {
             dispatch(addProduct(formData));
+            toast.success('Product added successfully!');
         }
         handleClose();
     };
@@ -43,6 +46,7 @@ const AdminDashboard = () => {
 
     const onDelete = (id) => {
         dispatch(deleteProduct(id));
+        toast.success('Product deleted successfully!');
     };
 
     if (loading) {
