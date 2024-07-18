@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getProducts, addProduct, updateProduct, deleteProduct } from '../actions/productActions';
-import { Container, Row, Col, Button, Form, Card, Modal } from 'react-bootstrap';
+import { Container, Row, Col, Button, Form, Card, Modal, Image } from 'react-bootstrap';
 import { toast } from 'react-toastify';
+import '../styles/AdminDashboard.css'; 
 
 const AdminDashboard = () => {
     const dispatch = useDispatch();
@@ -54,14 +55,14 @@ const AdminDashboard = () => {
     }
 
     return (
-        <Container className="mt-5">
-            <h1 className="mb-4">Admin Dashboard</h1>
+        <Container className="admin-dashboard mt-5">
+            <h1 className="mb-4 text-center">Admin Dashboard</h1>
             <Button variant="primary" onClick={handleShow} className="mb-4">Add Product</Button>
             <Row>
                 {products.map(product => (
                     <Col md={4} key={product._id} className="mb-4">
-                        <Card>
-                            <Card.Img variant="top" src={product.image} alt={product.name} style={{ height: '200px', objectFit: 'cover' }} />
+                        <Card className="product-card shadow-sm">
+                            <Image src={product.image} alt={product.name} fluid className="card-img-top" style={{ height: '200px', objectFit: 'cover' }} />
                             <Card.Body>
                                 <Card.Title>{product.name}</Card.Title>
                                 <Card.Text>{product.description}</Card.Text>
@@ -100,7 +101,7 @@ const AdminDashboard = () => {
                             <Form.Label>Image URL</Form.Label>
                             <Form.Control type="text" name="image" value={formData.image} onChange={onChange} required />
                         </Form.Group>
-                        <Button variant="primary" type="submit">
+                        <Button variant="primary" type="submit" className="w-100">
                             {editMode ? 'Update Product' : 'Add Product'}
                         </Button>
                     </Form>
