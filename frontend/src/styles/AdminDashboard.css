@@ -1,0 +1,21 @@
+.admin-dashboard h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.product-card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+}
+
+.product-card .card-title {
+    font-size: 1.25rem;
+    color: #007bff;
+}
+
+.product-card .card-text {
+    color: #555;
+}
