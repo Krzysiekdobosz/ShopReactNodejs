@@ -1,0 +1,30 @@
+.register-card {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+}
+
+.register-card h1 {
+    font-size: 2rem;
+    color: #007bff;
+}
+
+.register-card .form-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.register-card .form-control {
+    border-radius: 5px;
+}
+
+.register-card .btn-primary {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.register-card .btn-primary:hover {
+    background-color: #0056b3;
+}
