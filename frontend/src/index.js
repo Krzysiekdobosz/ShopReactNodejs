@@ -1,12 +1,18 @@
-import { combineReducers } from 'redux';
-import productReducer from './productReducer';
-import cartReducer from './cartReducer';
-import authReducer from './authReducer';
-import savedReducer from './savedReducer';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store';
+import App from './App';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer } from 'react-toastify';
 
-export default combineReducers({
-    products: productReducer,
-    cart: cartReducer,
-    auth: authReducer,
-    saved: savedReducer
-});
+ReactDOM.render(
+    <React.StrictMode>
+        <Provider store={store}>
+            <ToastContainer />
+            <App />
+        </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
+);

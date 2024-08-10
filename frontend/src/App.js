@@ -7,7 +7,7 @@ import HomePage from './components/HomePage';
 import ProductList from './components/ProductList';
 import ProductDetails from './components/ProductDetails';
 import Cart from './components/Cart';
-import SavedItems from './components/savedItems';
+import SavedItems from './components/savedItems'; // Popraw import nazwy komponentu
 import Login from './components/Login';
 import Register from './components/Register';
 import AdminDashboard from './components/AdminDashboard';

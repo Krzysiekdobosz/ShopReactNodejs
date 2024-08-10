@@ -5,7 +5,7 @@ const initialState = {
     loading: true
 };
 
-export default function(state = initialState, action) {
+function savedReducer(state = initialState, action) {
     switch(action.type) {
         case GET_SAVED_ITEMS:
             return {
@@ -27,3 +27,5 @@ export default function(state = initialState, action) {
             return state;
     }
 }
+
+export default savedReducer;
