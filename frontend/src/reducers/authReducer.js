@@ -1,4 +1,4 @@
-import { LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS } from '../actions/types';
+import { LOGIN_SUCCESS, LOGOUT_SUCCESS, REGISTER_SUCCESS } from '../actions/types';
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -7,7 +7,7 @@ const initialState = {
     user: null,
 };
 
-export default function (state = initialState, action) {
+function authReducer(state = initialState, action) {
     const { type, payload } = action;
 
     switch (type) {
@@ -21,7 +21,7 @@ export default function (state = initialState, action) {
                 loading: false,
                 user: payload.user,
             };
-        case LOGOUT:
+        case LOGOUT_SUCCESS:
             localStorage.removeItem('token');
             return {
                 ...state,
@@ -34,3 +34,5 @@ export default function (state = initialState, action) {
             return state;
     }
 }
+
+export default authReducer;

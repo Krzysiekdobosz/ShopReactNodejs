@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { LOGIN_SUCCESS, LOGOUT, REGISTER_SUCCESS } from './types';
+import { LOGIN_SUCCESS, LOGOUT_SUCCESS, REGISTER_SUCCESS } from './types';
 
 const setAuthToken = token => {
     if (token) {
@@ -33,5 +33,5 @@ export const login = (userData) => async dispatch => {
 
 export const logout = () => dispatch => {
     setAuthToken(null);
-    dispatch({ type: LOGOUT });
+    dispatch({ type: LOGOUT_SUCCESS });
 };

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { register } from '../actions/authActions';
 import { Container, Form, Button, Card } from 'react-bootstrap';
-import './Register.css';  // Dodanie pliku CSS
+import '../styles/Register.css';  
 
 const Register = () => {
     const [formData, setFormData] = useState({ name: '', email: '', password: '' });
