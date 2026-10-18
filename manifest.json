@@ -1,0 +1,8 @@
+{
+  "short_name": "Bike Shop",
+  "name": "Mini Bike Shop",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#0f766e",
+  "background_color": "#f7f8f6"
+}
