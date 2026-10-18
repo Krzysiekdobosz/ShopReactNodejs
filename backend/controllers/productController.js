@@ -1,76 +1,54 @@
 const Product = require('../models/Product');
+const Cart = require('../models/Cart');
+const User = require('../models/User');
+const { HttpError, asyncHandler } = require('../utils/httpError');
+const { buildProductQuery } = require('../utils/productQuery');
 
-exports.createProduct = async (req, res) => {
-    try {
-        const { name, description, price, category, image } = req.body;
-        const newProduct = new Product({
-            name,
-            description,
-            price,
-            category,
-            image
-        });
-        const product = await newProduct.save();
-        res.status(201).json(product);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
+const FIELDS = ['name', 'description', 'price', 'category', 'image', 'stock'];
+const pick = (body) => Object.fromEntries(FIELDS.filter((key) => key in body).map((key) => [key, body[key]]));
+
+exports.getProducts = asyncHandler(async (req, res) => {
+    const { filter, sort } = buildProductQuery(req.query);
+    const products = await Product.find(filter).sort(sort);
+    res.json(products);
+});
+
+exports.getCategories = (req, res) => {
+    res.json(Product.CATEGORIES);
 };
 
-exports.getProducts = async (req, res) => {
-    try {
-        const products = await Product.find();
-        res.json(products);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+exports.getProductById = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+        throw new HttpError(404, 'Product not found');
     }
-};
+    res.json(product);
+});
 
-exports.getProductById = async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ msg: 'Product not found' });
-        }
-        res.json(product);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
-    }
-};
+exports.createProduct = asyncHandler(async (req, res) => {
+    const product = await Product.create(pick(req.body));
+    res.status(201).json(product);
+});
 
-exports.updateProduct = async (req, res) => {
-    try {
-        const { name, description, price, category, image } = req.body;
-        let product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ msg: 'Product not found' });
-        }
-        product.name = name;
-        product.description = description;
-        product.price = price;
-        product.category = category;
-        product.image = image;
-        product = await product.save();
-        res.json(product);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+exports.updateProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findByIdAndUpdate(req.params.id, pick(req.body), { new: true, runValidators: true });
+    if (!product) {
+        throw new HttpError(404, 'Product not found');
     }
-};
+    res.json(product);
+});
 
-exports.deleteProduct = async (req, res) => {
-    try {
-        const product = await Product.findById(req.params.id);
-        if (!product) {
-            return res.status(404).json({ msg: 'Product not found' });
-        }
-        await product.remove();
-        res.json({ msg: 'Product removed' });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+exports.deleteProduct = asyncHandler(async (req, res) => {
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) {
+        throw new HttpError(404, 'Product not found');
     }
-};
+
+    // Keep carts and saved lists consistent with the catalogue.
+    await Promise.all([
+        Cart.updateMany({}, { $pull: { products: { product: product._id } } }),
+        User.updateMany({}, { $pull: { savedItems: product._id } }),
+    ]);
+
+    res.json({ msg: 'Product removed', id: product.id });
+});

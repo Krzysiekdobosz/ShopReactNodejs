@@ -1,37 +1,25 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, GET_CART } from '../actions/types';
+import { CART_LOADING, SET_CART } from '../actions/types';
 
 const initialState = {
-    cart: {
-        products: [],
-    },
-    loading: true,
+    cart: { products: [] },
+    loading: false,
 };
 
 function cartReducer(state = initialState, action) {
-    const { type, payload } = action;
-
-    switch (type) {
-        case GET_CART:
-            return {
-                ...state,
-                cart: payload,
-                loading: false,
-            };
-        case ADD_TO_CART:
-            return {
-                ...state,
-                cart: payload,
-                loading: false,
-            };
-        case REMOVE_FROM_CART:
-            return {
-                ...state,
-                cart: payload,
-                loading: false,
-            };
+    switch (action.type) {
+        case CART_LOADING:
+            return { ...state, loading: true };
+        case SET_CART:
+            return { ...state, cart: action.payload, loading: false };
         default:
             return state;
     }
 }
+
+export const selectCartCount = (state) =>
+    state.cart.cart.products.reduce((sum, item) => sum + item.quantity, 0);
+
+export const selectCartTotal = (state) =>
+    state.cart.cart.products.reduce((sum, item) => sum + item.quantity * item.product.price, 0);
 
 export default cartReducer;

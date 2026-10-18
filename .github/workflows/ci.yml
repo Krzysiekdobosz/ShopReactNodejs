@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+    branches: [V1]
+  pull_request:
+    branches: [V1]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: backend
+        working-directory: backend
+        run: |
+          npm ci
+          npm test
+      - name: frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm test -- --watchAll=false

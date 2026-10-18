@@ -1,28 +1,33 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { jwtSecret } = require('../config/env');
+const { HttpError, asyncHandler } = require('../utils/httpError');
 
-exports.authMiddleware = (req, res, next) => {
-    const token = req.header('Authorization')?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({ msg: 'No token, authorization denied' });
+exports.authMiddleware = asyncHandler(async (req, res, next) => {
+    const [scheme, token] = (req.header('Authorization') || '').split(' ');
+    if (scheme !== 'Bearer' || !token) {
+        throw new HttpError(401, 'No token, authorization denied');
     }
-    try {
-        const decoded = jwt.verify(token, 'jwtSecret');
-        req.user = decoded;
-        next();
-    } catch (err) {
-        res.status(401).json({ msg: 'Token is not valid' });
-    }
-};
 
-exports.adminMiddleware = async (req, res, next) => {
+    let payload;
     try {
-        const user = await User.findById(req.user.userId);
-        if (user.role !== 'admin') {
-            return res.status(403).json({ msg: 'Admin resource. Access denied.' });
-        }
-        next();
-    } catch (err) {
-        res.status(500).json({ msg: 'Server error' });
+        payload = jwt.verify(token, jwtSecret);
+    } catch {
+        throw new HttpError(401, 'Token is not valid');
     }
+
+    const user = await User.findById(payload.userId);
+    if (!user) {
+        throw new HttpError(401, 'User no longer exists');
+    }
+
+    req.user = user;
+    next();
+});
+
+exports.adminMiddleware = (req, res, next) => {
+    if (req.user?.role !== 'admin') {
+        return next(new HttpError(403, 'Admin resource. Access denied.'));
+    }
+    next();
 };

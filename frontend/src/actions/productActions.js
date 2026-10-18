@@ -1,70 +1,47 @@
-import axios from 'axios';
-import { GET_PRODUCTS, GET_PRODUCT, ADD_PRODUCT, UPDATE_PRODUCT, DELETE_PRODUCT } from './types';
+import { api } from '../api';
+import {
+    GET_PRODUCTS,
+    GET_PRODUCT,
+    GET_CATEGORIES,
+    ADD_PRODUCT,
+    UPDATE_PRODUCT,
+    DELETE_PRODUCT,
+    PRODUCTS_LOADING,
+    PRODUCTS_ERROR,
+} from './types';
 
-export const getProducts = (filters = {}) => async dispatch => {
+export const getProducts = (filters = {}) => async (dispatch) => {
+    dispatch({ type: PRODUCTS_LOADING });
     try {
-        const { category, minPrice, maxPrice, sortBy, order } = filters;
-        const res = await axios.get('http://localhost:5000/api/products', {
-            params: { category, minPrice, maxPrice, sortBy, order }
-        });
-        dispatch({ type: GET_PRODUCTS, payload: res.data });
+        dispatch({ type: GET_PRODUCTS, payload: await api.getProducts(filters) });
     } catch (err) {
-        console.error(err.response.data);
+        dispatch({ type: PRODUCTS_ERROR, payload: err.message });
     }
 };
 
-export const getProduct = (id) => async dispatch => {
+export const getProduct = (id) => async (dispatch) => {
+    dispatch({ type: PRODUCTS_LOADING });
     try {
-        const res = await axios.get(`http://localhost:5000/api/products/${id}`);
-        dispatch({ type: GET_PRODUCT, payload: res.data });
+        dispatch({ type: GET_PRODUCT, payload: await api.getProduct(id) });
     } catch (err) {
-        console.error(err.response.data);
+        dispatch({ type: PRODUCTS_ERROR, payload: err.message });
     }
 };
 
-export const addProduct = (productData) => async dispatch => {
-    try {
-        const token = localStorage.getItem('token');
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-        const res = await axios.post('http://localhost:5000/api/products', productData, config);
-        dispatch({ type: ADD_PRODUCT, payload: res.data });
-    } catch (err) {
-        console.error(err.response.data);
-    }
+export const getCategories = () => async (dispatch) => {
+    dispatch({ type: GET_CATEGORIES, payload: await api.getCategories() });
 };
 
-export const updateProduct = (id, productData) => async dispatch => {
-    try {
-        const token = localStorage.getItem('token');
-        const config = {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        };
-        const res = await axios.put(`http://localhost:5000/api/products/${id}`, productData, config);
-        dispatch({ type: UPDATE_PRODUCT, payload: res.data });
-    } catch (err) {
-        console.error(err.response.data);
-    }
+// The admin actions rethrow so the dashboard can show a toast with the reason.
+export const addProduct = (productData) => async (dispatch) => {
+    dispatch({ type: ADD_PRODUCT, payload: await api.createProduct(productData) });
 };
 
-export const deleteProduct = (id) => async dispatch => {
-    try {
-        const token = localStorage.getItem('token');
-        const config = {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        };
-        await axios.delete(`http://localhost:5000/api/products/${id}`, config);
-        dispatch({ type: DELETE_PRODUCT, payload: id });
-    } catch (err) {
-        console.error(err.response.data);
-    }
+export const updateProduct = (id, productData) => async (dispatch) => {
+    dispatch({ type: UPDATE_PRODUCT, payload: await api.updateProduct(id, productData) });
+};
+
+export const deleteProduct = (id) => async (dispatch) => {
+    await api.deleteProduct(id);
+    dispatch({ type: DELETE_PRODUCT, payload: id });
 };

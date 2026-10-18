@@ -1,35 +1,34 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const { jwtSecret, jwtExpiresIn } = require('../config/env');
+const { HttpError, asyncHandler } = require('../utils/httpError');
 
-exports.register = async (req, res) => {
+const signToken = (user) => jwt.sign({ userId: user.id, role: user.role }, jwtSecret, { expiresIn: jwtExpiresIn });
+
+exports.register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
-    try {
-        const user = new User({ name, email, password });
-        await user.save();
-        const token = jwt.sign({ userId: user.id, role: user.role }, 'jwtSecret', { expiresIn: '1h' });
-        res.status(201).json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    if (!name || !email || !password) {
+        throw new HttpError(400, 'Name, email and password are required');
     }
-};
+    if (password.length < 6) {
+        throw new HttpError(400, 'Password must be at least 6 characters long');
+    }
 
-exports.login = async (req, res) => {
+    const user = await User.create({ name, email, password });
+    res.status(201).json({ token: signToken(user), user: user.toPublic() });
+});
+
+exports.login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-    try {
-        const user = await User.findOne({ email });
-        if (!user) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-        const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) {
-            return res.status(400).json({ msg: 'Invalid credentials' });
-        }
-        const token = jwt.sign({ userId: user.id, role: user.role }, 'jwtSecret', { expiresIn: '1h' });
-        res.json({ token, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Server error');
+    const user = await User.findOne({ email: String(email || '').toLowerCase() }).select('+password');
+
+    if (!user || !(await user.comparePassword(password || ''))) {
+        throw new HttpError(400, 'Invalid credentials');
     }
+
+    res.json({ token: signToken(user), user: user.toPublic() });
+});
+
+exports.me = (req, res) => {
+    res.json({ user: req.user.toPublic() });
 };

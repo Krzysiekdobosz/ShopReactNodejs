@@ -1,56 +1,86 @@
-import React from 'react';
-import { Container, Row, Col, Button, Card } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import '../styles/HomePage.css';  
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { getProducts } from '../actions/productActions';
+import ProductCard from './ProductCard';
+import ProductImage from './ProductImage';
+import Loader from './Loader';
+
+const CATEGORY_TILES = [
+    { category: 'Mountain', title: 'Mountain bikes', text: 'Durable bikes for trails and forest paths.', sample: 'Trailblazer' },
+    { category: 'Road', title: 'Road & gravel', text: 'Fast and light for long rides.', sample: 'Velocity' },
+    { category: 'City', title: 'City bikes', text: 'Comfortable everyday commuting.', sample: 'Urban' },
+    { category: 'Accessories', title: 'Accessories', text: 'Helmets, lights, locks and more.', sample: 'Aero Helmet' },
+];
+
 const HomePage = () => {
+    const dispatch = useDispatch();
+    const { products, loading } = useSelector((state) => state.products);
+
+    useEffect(() => {
+        dispatch(getProducts({ sortBy: 'createdAt', order: 'desc' }));
+    }, [dispatch]);
+
     return (
-        <Container className="homepage mt-5">
-            <Row className="text-center mb-5">
-                <Col>
-                    <h1 className="display-4">Welcome to Mini Bike Shop</h1>
-                    <p className="lead">Your one-stop shop for the best mini bikes.</p>
-                    <Button variant="primary" size="lg" as={Link} to="/products">Shop Now</Button>
-                </Col>
-            </Row>
-            <Row>
-                <Col md={4} className="mb-4">
-                    <Card className="shadow-sm">
-                        <Card.Img variant="top" src="https://via.placeholder.com/400x200" alt="Mountain Bike" />
-                        <Card.Body>
-                            <Card.Title>Mountain Bikes</Card.Title>
-                            <Card.Text>
-                                Explore our range of durable and reliable mountain bikes.
-                            </Card.Text>
-                            <Button variant="primary" as={Link} to="/products">View Products</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col md={4} className="mb-4">
-                    <Card className="shadow-sm">
-                        <Card.Img variant="top" src="https://via.placeholder.com/400x200" alt="Road Bike" />
-                        <Card.Body>
-                            <Card.Title>Road Bikes</Card.Title>
-                            <Card.Text>
-                                Check out our collection of high-performance road bikes.
-                            </Card.Text>
-                            <Button variant="primary" as={Link} to="/products">View Products</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-                <Col md={4} className="mb-4">
-                    <Card className="shadow-sm">
-                        <Card.Img variant="top" src="https://via.placeholder.com/400x200" alt="Accessories" />
-                        <Card.Body>
-                            <Card.Title>Accessories</Card.Title>
-                            <Card.Text>
-                                Discover our wide range of bike accessories and gear.
-                            </Card.Text>
-                            <Button variant="primary" as={Link} to="/products">View Products</Button>
-                        </Card.Body>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+        <>
+            <section className="hero">
+                <Container>
+                    <Row className="align-items-center g-5">
+                        <Col lg={6}>
+                            <span className="hero__eyebrow">New season collection</span>
+                            <h1 className="hero__title">Find the bike that fits your ride</h1>
+                            <p className="hero__lead">
+                                Mountain, road, city and kids&apos; bikes plus all the gear you need &ndash;
+                                carefully selected and ready to ride.
+                            </p>
+                            <div className="d-flex gap-2 flex-wrap">
+                                <Button as={Link} to="/products" size="lg">Shop now</Button>
+                                <Button as={Link} to="/products?category=Accessories" size="lg" variant="outline-secondary">
+                                    Browse accessories
+                                </Button>
+                            </div>
+                        </Col>
+                        <Col lg={6}>
+                            <ProductImage product={{ name: 'Featured bike', category: 'Road' }} className="hero__image" />
+                        </Col>
+                    </Row>
+                </Container>
+            </section>
+
+            <Container className="py-5">
+                <h2 className="section-title">Shop by category</h2>
+                <Row className="g-3 mb-5">
+                    {CATEGORY_TILES.map((tile) => (
+                        <Col sm={6} lg={3} key={tile.category}>
+                            <Link to={`/products?category=${tile.category}`} className="category-tile">
+                                <ProductImage product={{ name: tile.sample, category: tile.category }} />
+                                <div>
+                                    <h3>{tile.title}</h3>
+                                    <p>{tile.text}</p>
+                                </div>
+                            </Link>
+                        </Col>
+                    ))}
+                </Row>
+
+                <div className="d-flex justify-content-between align-items-end mb-3">
+                    <h2 className="section-title mb-0">New arrivals</h2>
+                    <Link to="/products">See all &rarr;</Link>
+                </div>
+                {loading ? (
+                    <Loader />
+                ) : (
+                    <Row className="g-4">
+                        {products.slice(0, 4).map((product) => (
+                            <Col sm={6} lg={3} key={product._id}>
+                                <ProductCard product={product} />
+                            </Col>
+                        ))}
+                    </Row>
+                )}
+            </Container>
+        </>
     );
 };
 

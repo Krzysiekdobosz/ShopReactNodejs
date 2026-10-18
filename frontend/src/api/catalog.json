@@ -1,0 +1,17 @@
+[
+  { "name": "Trailblazer 29", "category": "Mountain", "price": 1299, "stock": 6, "description": "Hardtail mountain bike with a lightweight aluminium frame, 120 mm air fork and hydraulic disc brakes. Built for fast trail riding." },
+  { "name": "Ridgeback Pro", "category": "Mountain", "price": 2499, "stock": 3, "description": "Full-suspension trail bike with 140 mm of travel, 12-speed drivetrain and a dropper seat post for confident descents." },
+  { "name": "Rockhopper Junior", "category": "Mountain", "price": 649, "stock": 9, "description": "Entry-level mountain bike with 27.5\" wheels, front suspension and grippy tyres for gravel and forest paths." },
+  { "name": "Velocity SL", "category": "Road", "price": 1899, "stock": 4, "description": "Carbon road bike weighing just 8.2 kg, with a 22-speed groupset and aero rims for long, fast rides." },
+  { "name": "Endurance AL", "category": "Road", "price": 1099, "stock": 7, "description": "Comfortable endurance geometry, wide 32 mm tyres and disc brakes – a perfect first road bike." },
+  { "name": "Gravel Explorer", "category": "Road", "price": 1499, "stock": 5, "description": "Versatile gravel bike with mounts for bags and racks. Equally at home on asphalt and dirt roads." },
+  { "name": "Urban Glide", "category": "City", "price": 549, "stock": 12, "description": "Step-through city bike with a 7-speed hub, mudguards, rear rack and integrated lights." },
+  { "name": "Metro Fold", "category": "City", "price": 799, "stock": 8, "description": "Folding commuter bike that packs down in 10 seconds and fits under a desk or on a train." },
+  { "name": "E-Cruise 500", "category": "City", "price": 2199, "stock": 2, "description": "Electric city bike with a 500 Wh battery, up to 100 km of range and a quiet mid-drive motor." },
+  { "name": "Little Rider 16", "category": "Kids", "price": 229, "stock": 10, "description": "16\" kids' bike with removable training wheels, chain guard and easy-reach brakes. For ages 4–6." },
+  { "name": "Balance Bike Mini", "category": "Kids", "price": 119, "stock": 15, "description": "Pedal-free balance bike that teaches toddlers to ride. Adjustable seat, weighs only 3 kg." },
+  { "name": "Aero Helmet", "category": "Accessories", "price": 89, "stock": 20, "description": "Ventilated helmet with MIPS protection, magnetic buckle and a rear LED light." },
+  { "name": "Bright Light Set", "category": "Accessories", "price": 45, "stock": 30, "description": "USB-rechargeable front and rear lights, 400 lumens, five modes and up to 12 hours of battery life." },
+  { "name": "Steel U-Lock", "category": "Accessories", "price": 59, "stock": 18, "description": "Hardened steel U-lock with a frame mount and two keys. Security level 9/10." },
+  { "name": "Insulated Bottle", "category": "Accessories", "price": 19, "stock": 40, "description": "750 ml double-wall bottle that keeps drinks cold for up to 4 hours. BPA free." }
+]

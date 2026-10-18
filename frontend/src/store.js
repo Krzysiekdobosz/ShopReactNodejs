@@ -1,23 +1,21 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
+import { thunk } from 'redux-thunk';
 import authReducer from './reducers/authReducer';
 import productReducer from './reducers/productReducer';
 import cartReducer from './reducers/cartReducer';
-import { thunk } from 'redux-thunk'; // Corrected import
+import savedReducer from './reducers/savedReducer';
+
 const reducer = combineReducers({
     auth: authReducer,
     products: productReducer,
     cart: cartReducer,
+    saved: savedReducer,
 });
 
-const initialState = {};
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const middleware = [thunk];
+export const createAppStore = () => createStore(reducer, composeEnhancers(applyMiddleware(thunk)));
 
-const store = createStore(
-    reducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(...middleware))
-);
+const store = createAppStore();
 
 export default store;

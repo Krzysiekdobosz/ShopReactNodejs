@@ -1,37 +1,35 @@
-import axios from 'axios';
-import { LOGIN_SUCCESS, LOGOUT_SUCCESS, REGISTER_SUCCESS } from './types';
+import { api } from '../api';
+import { getToken, setToken } from '../api/token';
+import { AUTH_ERROR, LOGIN_SUCCESS, LOGOUT_SUCCESS, USER_LOADED, SET_CART, SET_SAVED_ITEMS } from './types';
 
-const setAuthToken = token => {
-    if (token) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-        localStorage.setItem('token', token);
-    } else {
-        delete axios.defaults.headers.common['Authorization'];
-        localStorage.removeItem('token');
+// Restores the session after a page reload.
+export const loadUser = () => async (dispatch) => {
+    if (!getToken()) {
+        dispatch({ type: AUTH_ERROR });
+        return;
     }
-};
-
-export const register = (userData) => async dispatch => {
     try {
-        const res = await axios.post('http://localhost:5000/api/auth/register', userData);
-        dispatch({ type: REGISTER_SUCCESS, payload: res.data });
-        setAuthToken(res.data.token);
-    } catch (err) {
-        console.error(err.response.data);
+        const user = await api.me();
+        dispatch({ type: USER_LOADED, payload: user });
+    } catch {
+        setToken(null);
+        dispatch({ type: AUTH_ERROR });
     }
 };
 
-export const login = (userData) => async dispatch => {
-    try {
-        const res = await axios.post('http://localhost:5000/api/auth/login', userData);
-        dispatch({ type: LOGIN_SUCCESS, payload: res.data });
-        setAuthToken(res.data.token);
-    } catch (err) {
-        console.error(err.response.data);
-    }
+const startSession = (dispatch, { token, user }) => {
+    setToken(token);
+    dispatch({ type: LOGIN_SUCCESS, payload: user });
+    return user;
 };
 
-export const logout = () => dispatch => {
-    setAuthToken(null);
+export const register = (userData) => async (dispatch) => startSession(dispatch, await api.register(userData));
+
+export const login = (userData) => async (dispatch) => startSession(dispatch, await api.login(userData));
+
+export const logout = () => (dispatch) => {
+    setToken(null);
     dispatch({ type: LOGOUT_SUCCESS });
+    dispatch({ type: SET_CART, payload: { products: [] } });
+    dispatch({ type: SET_SAVED_ITEMS, payload: [] });
 };

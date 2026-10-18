@@ -2,6 +2,7 @@ const express = require('express');
 const {
     createProduct,
     getProducts,
+    getCategories,
     getProductById,
     updateProduct,
     deleteProduct,
@@ -9,6 +10,8 @@ const {
 const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
+
+router.get('/categories', getCategories);
 
 router.route('/')
     .get(getProducts)
